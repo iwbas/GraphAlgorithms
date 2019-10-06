@@ -80,27 +80,55 @@ AList generateGraph() {
     const unsigned V = 5;//intDist(engine);
     const unsigned ADJ_MAX = V - 1;
     AList a = generateConnectedGraph(V);
-    for(size_t i = 0; i < 3; i++) {
-        //диапазон распределения от 0 до ADJ_MAX - i - 1
+    for(size_t i = 0; i < V; i++) {
         const unsigned SIZE = a[i].size();
-        intDist.param(typename decltype(intDist)::param_type(SIZE, ADJ_MAX));
-        //генерируем количество добавляемых смежных вершин
-        const unsigned ADJS_LEFT = intDist(engine);
-        intDist.param(typename decltype(intDist)::param_type(i + 1, ADJ_MAX));
-        for(size_t j = SIZE; j < ADJS_LEFT; j++) {
+        intDist.param(typename decltype(intDist)::param_type(0, ADJ_MAX-SIZE));
+        const unsigned ADJ_LEFT = intDist(engine);
+        cout << "ADJLEFT: " << ADJ_LEFT << endl;
+        cout << "SIZE: " << SIZE << endl;
+        displayAdjGraph(a);
+        intDist.param(typename decltype(intDist)::param_type(0, ADJ_MAX));
+        for(size_t j = 0; j < ADJ_LEFT; j++) {
+            //cout << j << endl;
             unsigned v;
             do {
                 v = intDist(engine);
-            } while (find(a[i].begin(), a[i].end(), v) != a[i].end());
+//                cout << (find(a[i].begin(), a[i].end(), v) != a[i].end()) << endl;
+//                cout << (a[j].size() == ADJ_MAX) << endl;
+            } while(find(a[i].begin(), a[i].end(), v) != a[i].end()
+                    || a[v].size() == ADJ_MAX
+                    || i == v);
             a[i].push_back(v);
             a[v].push_back(i);
+//            cout << "------" << endl;
+//            displayAdjGraph(a);
         }
     }
+    // for(size_t i = 0; i < ADJ_MAX; i++) {
+    //     //диапазон распределения от 0 до ADJ_MAX - i - 1
+    //     const unsigned SIZE = a[i].size();
+    //     intDist.param(typename decltype(intDist)::param_type(0, ADJ_MAX ));
+    //     //генерируем количество добавляемых смежных вершин
+    //     const unsigned ADJS_LEFT = intDist(engine);
+    //     intDist.param(typename decltype(intDist)::param_type(i + 1, ADJ_MAX));
+    //     for(size_t j = SIZE; j < ADJS_LEFT; j++) {
+    //         unsigned v;
+    //         do {
+    //             v = intDist(engine);
+    //         } while (find(a[i].begin(), a[i].end(), v) != a[i].end());
+    //         a[i].push_back(v);
+    //         a[v].push_back(i);
+    //     }
+    // }
     displayAdjGraph(a);
     return a;
 }
 
 int main() {
-    generateGraph();
+
+        auto a = generateGraph();
+
+
+
     return 0;
 }
