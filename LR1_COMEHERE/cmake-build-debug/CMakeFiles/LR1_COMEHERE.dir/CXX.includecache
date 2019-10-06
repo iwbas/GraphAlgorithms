@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+D:/University/AG/LR1_COMEHERE/main.cpp
+iostream
+-
+vector
+-
+list
+-
+random
+-
+chrono
+-
+algorithm
+-
+
