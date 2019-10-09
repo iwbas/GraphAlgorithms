@@ -9,9 +9,10 @@
 using namespace std;
 
 mt19937 engine(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-using AList = vector<list<unsigned>>;
-using Edge = pair<unsigned, unsigned>;
-using RList = vector<Edge>;
+using AList   = vector<list<unsigned>>;
+using Edge    = pair<unsigned, unsigned>;
+using RList   = vector<Edge>;
+using IMatrix = vector<vector<unsigned>>;
 
 /* TODO:
  *  1. Сгенерировать количество вершин и ребер                          +
@@ -20,31 +21,33 @@ using RList = vector<Edge>;
  *  4. Вычислить степени вершин и вывести в текстовый файл Degree       +
  *  5. Выполнить преобразование 1                                       +
  *  6. Вывести сгенерированное представление в текстовый файл Graph 1   +
- *  7. Вычислить степени вершин и сравнить с файлом Degree              -
- *  8. Выполнить преобразование 2                                       -
- *  9. Вывести сгенерированное представление в текстовый файл Graph 2   -
+ *  7. Вычислить степени вершин и сравнить с файлом Degree              +
+ *  8. Выполнить преобразование 2                                       +
+ *  9. Вывести сгенерированное представление в текстовый файл Graph 2   +
  *  10.Вычислить степени вершин и сравнить с файлом Degree              -
  */
 
 // Генерация списка смежности, преобразования
-AList generateConnectedGraph(const unsigned &);
-AList generateGraph();
-RList RListFromAList(const AList &);
+AList   generateConnectedGraph(const unsigned &);
+AList   generateGraph();
+RList   RListFromAList(const AList &);
+IMatrix IMatrixFromRList(const RList &);
 // Вывод в файл
 void GraphToFile(const AList &, const string &);
 void GraphToFile(const RList &, const string &);
+void GraphToFile(const IMatrix &, const string &);
 // Вывод на экран
 void GraphDisplay(const AList &);
 void GraphDisplay(const RList &);
 // Подсчет степеней
-vector<unsigned> calculateDegrees(const RList &);
+unsigned CalculateVertexAmount(const RList &);
+vector<unsigned> CalculateDegrees(const RList &);
 // Вывод степеней вершин в файл
-void DegreesToFile(const AList &a, const string &fileName);
+void DegreesToFile(const AList &a, const string &);
+vector<unsigned> DegreesFromFile(const string &);
 
-unsigned calculateDegreesAmount(const AList &);
-unsigned calculateDegreesAmount(const RList &);
-
-unsigned calculateRibsAmount(const AList &);
+unsigned CalculateDegreesAmount(const AList &a);
+unsigned CalculateRibsAmount(const AList &a);
 
 int main() {
     auto a = generateGraph();
@@ -53,12 +56,11 @@ int main() {
     auto r = RListFromAList(a);
     GraphDisplay(r);
     GraphToFile(r, "Graph 1.txt");
-    cout << "--------------------------" << endl;
-    cout << "--------------------------" << endl;
-    cout << "--------------------------" << endl;
-    calculateDegrees(r);
-
-
+    auto rDegrees = CalculateDegrees(r);
+    auto aDegrees = DegreesFromFile("Degree.txt");
+    cout << "Степени " << ((rDegrees == aDegrees) ? "совпадают" : "не совпадают") << endl;
+    auto inc = IMatrixFromRList(r);
+    GraphToFile(inc, "Graph 2.txt");
     return 0;
 }
 
@@ -112,7 +114,7 @@ AList generateGraph() {
 }
 
 RList RListFromAList(const AList &a) {
-    RList result(calculateRibsAmount(a));
+    RList result(CalculateRibsAmount(a));
     auto iter = result.begin();
     for(size_t i = 0; iter != result.end(); i++) {
         for(const auto &v: a[i]) {
@@ -125,6 +127,16 @@ RList RListFromAList(const AList &a) {
     return result;
 }
 
+IMatrix IMatrixFromRList(const RList &r) {
+    IMatrix result(CalculateVertexAmount(r), vector<unsigned>(r.size()));
+
+    for(size_t i = 0; i < r.size(); i++) {
+        result[r[i].first][i] = 1;
+        result[r[i].second][i] = 1;
+    }
+    return result;
+}
+
 void GraphToFile(const AList &a, const string &fileName) {
     ofstream out(fileName);
     out << "Сгенерированный граф," << endl
@@ -132,7 +144,7 @@ void GraphToFile(const AList &a, const string &fileName) {
         << a.size() << ","
         << endl
         << "и количеством ребер - "
-        << calculateRibsAmount(a)
+        << CalculateRibsAmount(a)
         << endl;
     for(size_t i = 0; i < a.size(); i++) {
         out << i << ": ";
@@ -148,6 +160,16 @@ void GraphToFile(const RList &r, const string &fileName) {
     out << "Список ребер:" << endl;
     for(const auto &edge: r) {
         out << "[ " << edge.first << "; " << edge.second << " ]" << endl;
+    }
+}
+
+void GraphToFile(const IMatrix &inc, const string &fileName) {
+    ofstream out(fileName);
+    out << "Матрица инциденции:" << endl;
+    for(const auto &row: inc) {
+        for(const auto &x: row)
+            out << x << " ";
+        out << endl;
     }
 }
 
@@ -171,7 +193,6 @@ void GraphDisplay(const RList &r) {
  * Ввиду составленного алгоритма преобразования списка смежности в список ребер,
  * первая вершина пары не может иметь максимальный индекс вершины.
  * Поэтому происходит поиск максимального индекса по второй.
- * Спагетти?
  */
 unsigned CalculateVertexAmount(const RList &r) {
     auto t = max_element(r.begin(), r.end(), [](const Edge &a, const Edge &b){
@@ -192,10 +213,6 @@ vector<unsigned> CalculateDegrees(const RList &r) {
     return result;
 }
 
-bool CompareAListRListDegrees(const AList &a, const RList &r) {
-
-}
-
 void DegreesToFile(const AList &a, const string &fileName) {
     ofstream out(fileName);
     for(const auto & d : a)
@@ -205,21 +222,22 @@ void DegreesToFile(const AList &a, const string &fileName) {
 vector<unsigned> DegreesFromFile(const string &fileName) {
     ifstream in(fileName);
     vector<unsigned> result;
-    while(!in.eof()) {
-        unsigned t;
-        in >> t;
+    unsigned t;
+    while(in >> t) {
+        //in >> t;
+        //cout << t << endl;
         result.push_back(t);
     }
+    return result;
 }
 
-unsigned calculateDegreesAmount(const AList &a) {
+unsigned CalculateDegreesAmount(const AList &a) {
     unsigned amount = 0;
     for(auto &l: a)
         amount += l.size();
     return amount;
 }
 
-unsigned calculateRibsAmount(const AList &a) {
-    cout << calculateDegreesAmount(a) << endl;
-    return calculateDegreesAmount(a) / 2;
+unsigned CalculateRibsAmount(const AList &a) {
+    return CalculateDegreesAmount(a) / 2;
 }

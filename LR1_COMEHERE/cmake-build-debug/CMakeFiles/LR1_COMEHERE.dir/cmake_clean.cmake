@@ -1,9 +1,7 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/LR1_COMEHERE.dir/main.cpp.obj"
+  "CMakeFiles/LR1_COMEHERE.dir/main.cpp.o"
+  "LR1_COMEHERE"
   "LR1_COMEHERE.pdb"
-  "LR1_COMEHERE.exe"
-  "LR1_COMEHERE.exe.manifest"
-  "libLR1_COMEHERE.dll.a"
 )
 
 # Per-language clean rules from dependency scanning.

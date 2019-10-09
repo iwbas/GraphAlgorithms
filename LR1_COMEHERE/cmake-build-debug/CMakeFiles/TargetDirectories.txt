@@ -1,3 +1,3 @@
-D:/GitHub/GraphAlgorithmsLR1/LR1_COMEHERE/cmake-build-debug/CMakeFiles/LR1_COMEHERE.dir
-D:/GitHub/GraphAlgorithmsLR1/LR1_COMEHERE/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/GitHub/GraphAlgorithmsLR1/LR1_COMEHERE/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/iwbas/Документы/GitHub/GraphAlgorithms/LR1_COMEHERE/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/iwbas/Документы/GitHub/GraphAlgorithms/LR1_COMEHERE/cmake-build-debug/CMakeFiles/LR1_COMEHERE.dir
+/home/iwbas/Документы/GitHub/GraphAlgorithms/LR1_COMEHERE/cmake-build-debug/CMakeFiles/edit_cache.dir

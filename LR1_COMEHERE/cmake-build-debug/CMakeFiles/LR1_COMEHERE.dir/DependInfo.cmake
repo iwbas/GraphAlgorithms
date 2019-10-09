@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "D:/GitHub/GraphAlgorithmsLR1/LR1_COMEHERE/main.cpp" "D:/GitHub/GraphAlgorithmsLR1/LR1_COMEHERE/cmake-build-debug/CMakeFiles/LR1_COMEHERE.dir/main.cpp.obj"
+  "/home/iwbas/Документы/GitHub/GraphAlgorithms/LR1_COMEHERE/main.cpp" "/home/iwbas/Документы/GitHub/GraphAlgorithms/LR1_COMEHERE/cmake-build-debug/CMakeFiles/LR1_COMEHERE.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
