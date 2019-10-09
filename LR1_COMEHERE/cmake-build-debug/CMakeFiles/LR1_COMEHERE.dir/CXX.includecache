@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/iwbas/Документы/GitHub/GraphAlgorithms/LR1_COMEHERE/main.cpp
+D:/GitHub/GraphAlgorithmsLR1/LR1_COMEHERE/main.cpp
 iostream
 -
 vector
@@ -18,5 +18,7 @@ random
 chrono
 -
 algorithm
+-
+fstream
 -
 
