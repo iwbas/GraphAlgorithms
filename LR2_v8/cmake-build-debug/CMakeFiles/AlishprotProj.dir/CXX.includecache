@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+D:/GitHub/GraphAlgorithms/LR2_v8/main.cpp
+iostream
+-
+vector
+-
+random
+-
+chrono
+-
+queue
+-
+algorithm
+-
+

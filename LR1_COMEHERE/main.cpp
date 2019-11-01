@@ -5,6 +5,7 @@
 #include <chrono>
 #include <algorithm>
 #include <fstream>
+//#include "windows.h"
 
 using namespace std;
 
@@ -24,7 +25,7 @@ using IMatrix = vector<vector<unsigned>>;
  *  7. Вычислить степени вершин и сравнить с файлом Degree              +
  *  8. Выполнить преобразование 2                                       +
  *  9. Вывести сгенерированное представление в текстовый файл Graph 2   +
- *  10.Вычислить степени вершин и сравнить с файлом Degree              -
+ *  10.Вычислить степени вершин и сравнить с файлом Degree              +
  */
 
 // Генерация списка смежности, преобразования
@@ -42,6 +43,7 @@ void GraphDisplay(const RList &);
 // Подсчет степеней
 unsigned CalculateVertexAmount(const RList &);
 vector<unsigned> CalculateDegrees(const RList &);
+vector<unsigned> CalculateDegrees(const IMatrix &);
 // Вывод степеней вершин в файл
 void DegreesToFile(const AList &a, const string &);
 vector<unsigned> DegreesFromFile(const string &);
@@ -61,6 +63,8 @@ int main() {
     cout << "Степени " << ((rDegrees == aDegrees) ? "совпадают" : "не совпадают") << endl;
     auto inc = IMatrixFromRList(r);
     GraphToFile(inc, "Graph 2.txt");
+    auto iDegrees = CalculateDegrees(inc);
+    cout << "Степени " << ((rDegrees == iDegrees) ? "совпадают" : "не совпадают") << endl;
     return 0;
 }
 
@@ -90,7 +94,7 @@ AList generateConnectedGraph(const unsigned &V) {
 
 AList generateGraph() {
     uniform_int_distribution<unsigned> intDist(20, 30);
-    const unsigned V = 7;//intDist(engine);
+    const unsigned V = 12;//intDist(engine);
     const unsigned ADJ_MAX = V - 1;
     unsigned RIBS_COUNT = 0;
     AList a = generateConnectedGraph(V);
@@ -207,8 +211,21 @@ vector<unsigned> CalculateDegrees(const RList &r) {
         result[edge.first]++;
         result[edge.second]++;
     }
-    for(const auto &x: result)
+    return result;
+}
+
+vector<unsigned> CalculateDegrees(const IMatrix &inc) {
+    vector<unsigned> result(inc.size());
+    for(size_t i = 0; i < inc.size(); i++)
+        for(const auto &x: inc[i]) {
+            if(x == 1) {
+                result[i]++;
+            }
+        }
+
+    for(const auto& x: result) {
         cout << x << " ";
+    }
     cout << endl;
     return result;
 }
@@ -223,11 +240,8 @@ vector<unsigned> DegreesFromFile(const string &fileName) {
     ifstream in(fileName);
     vector<unsigned> result;
     unsigned t;
-    while(in >> t) {
-        //in >> t;
-        //cout << t << endl;
+    while(in >> t)
         result.push_back(t);
-    }
     return result;
 }
 

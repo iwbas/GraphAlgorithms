@@ -1,0 +1,3 @@
+D:/GitHub/GraphAlgorithms/LR2_v8/cmake-build-debug/CMakeFiles/AlishprotProj.dir
+D:/GitHub/GraphAlgorithms/LR2_v8/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/GitHub/GraphAlgorithms/LR2_v8/cmake-build-debug/CMakeFiles/rebuild_cache.dir
