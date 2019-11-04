@@ -1,124 +1,93 @@
 #include <iostream>
-#include <vector>
 #include <random>
+#include <vector>
 #include <chrono>
-#include <queue>
 #include <algorithm>
-
-/*
- * TODO:
- *  1. Повторяющиеся ребра
- *
- */
+#include <stack>
 
 using namespace std;
-using Matrix = vector<vector<unsigned>>;
-using Edge    = pair<unsigned, unsigned>;
+using Matrix = vector<vector<uint8_t>>;
+using Edge = pair<unsigned, unsigned>;
 
 auto seed = chrono::high_resolution_clock::now().time_since_epoch().count();
-mt19937 engine(seed);
+mt19937 eng(seed);
 
 void MatrixOutput(const Matrix &M, ostream& stream) {
     for(auto r: M){
         for(auto c: r)
-            stream << c << " ";
+            stream << (int)c << " ";
         stream << endl;
     }
 }
 
+unsigned UGen(const unsigned &left, const unsigned &right) {
+    return uniform_int_distribution<unsigned>(left, right)(eng);
+}
 
-vector<Edge> GenerateEdgesOfConnectedGraph(const unsigned &V) {
-    uniform_int_distribution<unsigned> dist(0, V-1);
-    vector<Edge> edges(V - 1);
-    vector<uint8_t> involved(V);
-    Edge e(dist(engine), dist(engine));
-    involved[e.first ] = 1;
-    involved[e.second] = 1;
+Edge GenerateEdge(const unsigned &left, const unsigned &right) {
+    Edge e;
+    do {
+        e = Edge(UGen(left, right), UGen(left, right));
+    } while (e.first == e.second);
+    return e;
+}
+
+//генерация множества ребер минимально связного графа
+vector<Edge> GenerateConnectedEdges(const unsigned &V) {
+    vector<uint8_t> involved(V);    //Хранит информацию есть ли у вершины связь
+    const unsigned R = V - 1;       //Минимальное количество ребер связного графа
+    vector<Edge> edges(R);
+
+    Edge e = GenerateEdge(0, V - 1);
     edges[0] = e;
-    for(size_t i = 1; i < V - 1; i++) {
+    involved[e.first]  = 1;
+    involved[e.second] = 1;
+    for(size_t i = 1; i < R; i++) {
         do {
-            e = Edge(dist(engine), dist(engine));
-        } while (e.first == e.second && involved[e.first] == involved[e.second]);
+            e = GenerateEdge(0, V - 1);
+        } while (involved[e.first] == involved[e.second]);
+        if(involved[e.first] == 0) involved[e.first]  = 1;
+        else                       involved[e.second] = 1;
         edges[i] = e;
-        involved[e.first] = involved[e.second] = 1;
-    };
-    for(auto &e: edges) {
-        cout << "[" << e.first << ";" << e.second << "]" << " ,";
     }
-    cout << endl;
-}
-Matrix GenerateConnectedIMatrix(const unsigned &V, const unsigned &R) {
-    uniform_int_distribution<unsigned> dist(0, V-1);
-    vector<uint8_t> isInvolved(V);
-    Matrix result(V, vector<unsigned>(R));
-    unsigned first  = dist(engine);
-    unsigned second = dist(engine);
-    result[first ][0] = 1;
-    result[second][0] = 1;
-    for(size_t i = 1; i < V - 1; i++) {
-        do {
-            first  = dist(engine);
-            second = dist(engine);
-        } while (first == second && (isInvolved[first] == isInvolved[second]));
-        result[first][i]  = 1;
-        result[second][i] = 1;
-    }
-    MatrixOutput(result, cout);
-    return result;
-}
-//генерировать множество неповторяющихся edges, заполнить им матрицу
-Matrix GenerateIMatrix() {
-    uniform_int_distribution<unsigned> dist(20, 30);
-    const unsigned V = 5;//dist(engine);
-    const unsigned R = 5;//(V * (V - 1) / 2) / 2;
-
-    Matrix result;//s = GenerateConnectedIMatrix(V, R);
-
-    vector<Edge> edges(R - (V - 1));
-
-    dist.param(std::uniform_int_distribution<unsigned >::param_type(0, V - 1));
-    for(auto &edge: edges) {
-        Edge genEdge;
-        do {
-            genEdge = Edge(dist(engine), dist(engine));
-        } while (find(edges.begin(), edges.end(), genEdge) != edges.end());
-        edge = genEdge;
-    }
-
-    for(auto &e: edges) {
-        cout << "[" << e.first << ";" << e.second << "]" << " ,";
-    }
-    cout << endl;
-
-
-    for(size_t i = V - 1; i < R; i++) {
-        unsigned first = dist(engine);
-        unsigned second;
-        do {
-            second = dist(engine);
-        } while (first == second);
-        result[ first  ][i] = 1;
-        result[ second ][i] = 1;
-    }
-    cout << endl;
-    MatrixOutput(result, cout);
-    return result;
+    return edges;
 }
 
-//void IMatrixBFS(const Matrix &incMatrix) {
-//    bool *visited = new bool[incMatrix.size()];
-//    for(auto &x: visited)
-//        x = false;
-//
-//    //queue<unsigned>
-//}
+template< class InputIt >
+bool EdgeExist(InputIt firstRow, InputIt secondRow, InputIt firstRowEnd, const Edge &e) {
+    while(firstRow != firstRowEnd) {
+        if(*firstRow == 1 && *secondRow == 1) return true;
+        firstRow++;
+        secondRow++;
+    }
+    return false;
+}
 
-//vector<vector<unsigned>> TransposeMatrix()
+Matrix GenerateIncMatrix() {
+    const unsigned V = 5;
+    const unsigned R = 6;
+    vector<Edge> connEdges = GenerateConnectedEdges(V);
+    Matrix m(V, vector<uint8_t>(R));
+    size_t i = 0;
+    for(auto &e: connEdges) {
+        m[e.first][i] = m[e.second][i] = 1;
+        i++;
+    }
+    for(i; i < R; i++) {
+        Edge e;
+        bool b;
+        do {
+            e = GenerateEdge(0, V - 1);
+        } while (EdgeExist(m[e.first].begin(), m[e.second].begin(), m[e.first].begin()+i, e));
+        m[e.first][i] = m[e.second][i] = 1;
+    }
+    return m;
+}
 
-Matrix AMatrixFromIMatrix(const Matrix& I) {
+Matrix AMatrixFromIMatrix(const Matrix &I) {
     unsigned V = I.size();
     unsigned R = I[0].size();
-    Matrix result(V, vector<unsigned>(V));
+    Matrix result(V, vector<uint8_t>(V));
     for(size_t j = 0; j < R; j++) {
         int foundedCounter = 0;
         int i = 0;
@@ -133,13 +102,28 @@ Matrix AMatrixFromIMatrix(const Matrix& I) {
     return result;
 }
 
-int main() {
-    GenerateEdgesOfConnectedGraph(5);
-    //GenerateConnectedIMatrix(5, 10);
-    //auto AM = AMatrixFromIMatrix(GenerateIMatrix());
-    //cout << endl;
-    //MatrixOutput(AM, cout);
+// void DFS() {
+//     stack<unsigned> s;
+//     s.push(0);
+//     while(!s.empty()) {
+//         unsigned v = s.top();
+//         s.pop();
+//         for(unsigned i = 0; i < edges[v].size(); i++) {
+//             if(mark[edges[v][i]] == 0) {
+//                 s.push(edges[v][i]);
+//                 mark[edges[v][i]] = 1;
+//             }
+//         }
+//     }
+// }
 
-    std::cout << "Hello, World!" << std::endl;
+int main() {
+    do {
+        auto k = GenerateIncMatrix();
+        MatrixOutput(k, cout);  
+        cout << endl;
+        MatrixOutput(AMatrixFromIMatrix(k), cout);
+        system("pause");
+    } while(true);
     return 0;
 }
