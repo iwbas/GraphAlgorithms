@@ -4,6 +4,8 @@
 #include <chrono>
 #include <algorithm>
 #include <stack>
+#include <queue>
+#include <fstream>
 
 using namespace std;
 using Matrix = vector<vector<uint8_t>>;
@@ -64,8 +66,8 @@ bool EdgeExist(InputIt firstRow, InputIt secondRow, InputIt firstRowEnd, const E
 }
 
 Matrix GenerateIncMatrix() {
-    const unsigned V = 5;
-    const unsigned R = 6;
+    const unsigned V = 7;
+    const unsigned R = 12;
     vector<Edge> connEdges = GenerateConnectedEdges(V);
     Matrix m(V, vector<uint8_t>(R));
     size_t i = 0;
@@ -102,28 +104,64 @@ Matrix AMatrixFromIMatrix(const Matrix &I) {
     return result;
 }
 
-// void DFS() {
-//     stack<unsigned> s;
-//     s.push(0);
-//     while(!s.empty()) {
-//         unsigned v = s.top();
-//         s.pop();
-//         for(unsigned i = 0; i < edges[v].size(); i++) {
-//             if(mark[edges[v][i]] == 0) {
-//                 s.push(edges[v][i]);
-//                 mark[edges[v][i]] = 1;
-//             }
-//         }
-//     }
-// }
+void DFSIMatrix(const Matrix &M, const unsigned &start) {
+    ofstream out("Graph.txt", ios::app);
+    out << "Проход в ширину: " << endl;
+    const unsigned R = M[0].size();
+    vector<unsigned> mark(M.size());
+    mark[start] = 1;
+    stack<unsigned> s;
+    s.push(start);
+    while(!s.empty()) {
+        unsigned v = s.top();
+        s.pop();
+        out << v << " ";
+        for(unsigned j = 0; j < R; j++) {
+            while (M[v][j] != 1 && j < R) j++;
+            unsigned k = 0;
+            while ( ( M[k][j] != 1 || k == v ) && j < R) k++;
+            if(mark[k] == 0) {
+                s.push(k);
+                mark[k] = 1;
+            }
+        }
+    }
+}
+
+void BFSAMatrix(const Matrix &M, const unsigned &start) {
+    ofstream out("Graph1.txt", ios::app);
+    out << "Проход в ширину:" << endl;
+    const unsigned V = M[0].size();
+    vector<unsigned> mark(M.size());
+    mark[start] = 1;
+    queue<unsigned> s;
+    s.push(start);
+    while(!s.empty()) {
+        unsigned v = s.front();
+        s.pop();
+        out << v << " ";
+        for(unsigned j = 0; j < V; j++) {
+            if(M[v][j] == 1 && mark[j] == 0) {
+                s.push(j);
+                mark[j] = 1;
+            }
+        }
+    }
+}
+
+void MatrixToFile(const Matrix &M, const string &fileName) {
+    ofstream o(fileName);
+    MatrixOutput(M, o);
+}
 
 int main() {
-    do {
-        auto k = GenerateIncMatrix();
-        MatrixOutput(k, cout);  
-        cout << endl;
-        MatrixOutput(AMatrixFromIMatrix(k), cout);
-        system("pause");
-    } while(true);
+    auto IMatrix = GenerateIncMatrix();
+    MatrixToFile(IMatrix, "Graph.txt");
+    DFSIMatrix(IMatrix, 0);
+    
+    auto AMatrix = AMatrixFromIMatrix(IMatrix);
+    MatrixToFile(AMatrix, "Graph1.txt");
+    BFSAMatrix(AMatrix, 0);
+
     return 0;
 }
