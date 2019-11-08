@@ -128,14 +128,15 @@ void DFSIMatrix(const Matrix &M, const unsigned &start) {
     }
 }
 
-void BFSAMatrix(const Matrix &M, const unsigned &start) {
-    ofstream out("Graph1.txt", ios::app);
-    out << "Проход в ширину:" << endl;
+
+
+vector<unsigned> BFSAMatrix(const Matrix &M, const unsigned &start, const unsigned &to) {
+    ofstream out("Graph1.txt");
     const unsigned V = M[0].size();
     vector<unsigned> mark(M.size());
-    mark[start] = 1;
     queue<unsigned> s;
     s.push(start);
+    mark[start] = 1;
     while(!s.empty()) {
         unsigned v = s.front();
         s.pop();
@@ -147,6 +148,33 @@ void BFSAMatrix(const Matrix &M, const unsigned &start) {
             }
         }
     }
+}
+
+unsigned Diameter(const Matrix &M) {
+    unsigned diameter = 0;
+    for(size_t i = 0; i < M.size() - 1; i++) {
+        vector<unsigned> mark(M.size());
+        queue<unsigned> s;
+        vector<unsigned> d(M.size());
+        s.push(i);
+        mark[i] = 1;
+        while(!s.empty()) {
+            unsigned v = s.front();
+            s.pop();
+            for(unsigned j = 0; j < M.size(); j++) {
+                if(M[v][j] == 1 && mark[j] == 0) {
+                    s.push(j);
+                    mark[j] = 1;
+                    d[j] = d[v] + 1;
+                }
+            }
+        }
+        auto max = max_element(d.begin(), d.end());
+        if(*max > diameter) {
+            diameter = *max;
+        }
+    }
+    return diameter;
 }
 
 void MatrixToFile(const Matrix &M, const string &fileName) {
@@ -161,7 +189,9 @@ int main() {
     
     auto AMatrix = AMatrixFromIMatrix(IMatrix);
     MatrixToFile(AMatrix, "Graph1.txt");
-    BFSAMatrix(AMatrix, 0);
+    BFSAMatrix(AMatrix, 0, 5);
+
+    cout << Diameter(AMatrix) << endl;
 
     return 0;
 }
