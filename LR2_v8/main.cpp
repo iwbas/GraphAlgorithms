@@ -130,7 +130,7 @@ void DFSIMatrix(const Matrix &M, const unsigned &start) {
 
 
 
-vector<unsigned> BFSAMatrix(const Matrix &M, const unsigned &start, const unsigned &to) {
+void BFSAMatrix(const Matrix &M, const unsigned &start, const unsigned &to) {
     ofstream out("Graph1.txt");
     const unsigned V = M[0].size();
     vector<unsigned> mark(M.size());

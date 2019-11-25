@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/AlishprotProj.dir/main.cpp.obj"
-  "AlishprotProj.pdb"
   "AlishprotProj.exe"
   "AlishprotProj.exe.manifest"
+  "AlishprotProj.pdb"
+  "CMakeFiles/AlishprotProj.dir/main.cpp.obj"
   "libAlishprotProj.dll.a"
 )
 

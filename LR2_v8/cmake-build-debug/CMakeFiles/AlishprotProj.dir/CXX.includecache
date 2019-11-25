@@ -6,17 +6,21 @@
 
 #IncludeRegexTransform: 
 
-D:/GitHub/GraphAlgorithms/LR2_v8/main.cpp
+E:/GitHub/GraphAlgorithms/LR2_v8/main.cpp
 iostream
--
-vector
 -
 random
 -
+vector
+-
 chrono
+-
+algorithm
+-
+stack
 -
 queue
 -
-algorithm
+fstream
 -
 

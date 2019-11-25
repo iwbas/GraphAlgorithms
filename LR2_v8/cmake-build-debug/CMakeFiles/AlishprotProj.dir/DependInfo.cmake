@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "D:/GitHub/GraphAlgorithms/LR2_v8/main.cpp" "D:/GitHub/GraphAlgorithms/LR2_v8/cmake-build-debug/CMakeFiles/AlishprotProj.dir/main.cpp.obj"
+  "E:/GitHub/GraphAlgorithms/LR2_v8/main.cpp" "E:/GitHub/GraphAlgorithms/LR2_v8/cmake-build-debug/CMakeFiles/AlishprotProj.dir/main.cpp.obj"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
