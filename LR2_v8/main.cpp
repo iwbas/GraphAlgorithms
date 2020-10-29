@@ -106,7 +106,7 @@ Matrix AMatrixFromIMatrix(const Matrix &I) {
 
 void DFSIMatrix(const Matrix &M, const unsigned &start) {
     ofstream out("Graph.txt", ios::app);
-    out << "Проход в ширину: " << endl;
+    out << "Проход в глубину: " << endl;
     const unsigned R = M[0].size();
     vector<unsigned> mark(M.size());
     mark[start] = 1;
@@ -131,7 +131,8 @@ void DFSIMatrix(const Matrix &M, const unsigned &start) {
 
 
 void BFSAMatrix(const Matrix &M, const unsigned &start, const unsigned &to) {
-    ofstream out("Graph1.txt");
+    ofstream out("Graph1.txt", ios::app);
+    out << "Проход в ширину: " << endl;
     const unsigned V = M[0].size();
     vector<unsigned> mark(M.size());
     queue<unsigned> s;
@@ -192,6 +193,6 @@ int main() {
     BFSAMatrix(AMatrix, 0, 5);
 
     cout << Diameter(AMatrix) << endl;
-
+    system("pause");
     return 0;
 }

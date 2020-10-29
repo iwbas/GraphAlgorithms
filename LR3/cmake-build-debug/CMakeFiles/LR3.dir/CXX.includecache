@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+E:/GitHub/GraphAlgorithms/LR3/main.cpp
+iostream
+-
+vector
+-
+utility
+-
+chrono
+-
+random
+-
+fstream
+-
+queue
+-
+stack
+-
+

@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+E:/GitHub/GraphAlgorithms/LR4/main.cpp
+iostream
+-
+vector
+-
+chrono
+-
+random
+-
+fstream
+-
+list
+-
+windows.h
+E:/GitHub/GraphAlgorithms/LR4/windows.h
+

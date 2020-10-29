@@ -1,0 +1,7 @@
+[
+{
+  "directory": "E:/GitHub/GraphAlgorithms/LR5/build",
+  "command": "C:\\MinGW\\bin\\g++.exe    -g   -std=gnu++14 -o CMakeFiles\\LR5.dir\\main.cpp.obj -c E:\\GitHub\\GraphAlgorithms\\LR5\\main.cpp",
+  "file": "E:/GitHub/GraphAlgorithms/LR5/main.cpp"
+}
+]
